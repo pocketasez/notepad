@@ -1,0 +1,14 @@
+FROM python:3.12
+
+
+COPY ./requirements.txt /app/
+COPY ./setup.py /app/
+COPY ./src /app/src
+WORKDIR /app/
+RUN python -m venv venv
+RUN /app/venv/bin/pip install --upgrade pip --progress-bar off
+RUN /app/venv/bin/pip install -r requirements.txt --no-cache-dir --progress-bar off
+RUN /app/venv/bin/pip install /app --progress-bar off
+WORKDIR /app/src
+
+ENTRYPOINT ["/app/venv/bin/uvicorn", "src.app:app","--host","0.0.0.0","--port","8080"]
